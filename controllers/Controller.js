@@ -15,8 +15,10 @@ const Login = async (req, res) => {
     console.log("USERS: ", users);
     const login =  await pool.db('Parcial2').collection('users').findOne({ user: datos.correo, password: hashedPassword });
     if (login) {
+
       // Obtener la fecha y hora actual en formato Bogotá
       const currentDateTime = moment().tz('America/Bogota').format('YYYY-MM-DD HH:mm:ss');
+      
       // Almacenar en la colección log_login
       await pool.db('Parcial2').collection('log_login').insertOne({ user: datos.correo, rol: login.rol, fecha: currentDateTime });
       res.json({ status: "Bienvenido", id: login._id, user: login.user, rol: login.rol});
@@ -355,7 +357,7 @@ const InfoTablaUser = async (req, res) => {
 const InfoTablaAdmin1 = async (req, res) => {
   try {
     // Buscar en la colección 'codigos' los documentos que tengan el estado  con el id del user  autenticado
-    const DatosPremio = await pool.db('Parcial2').collection('intentos').find({premio: "Ganaste 1.000.000"}).toArray();
+    const DatosPremio = await pool.db('Parcial2').collection('intentos').find().toArray();
     
     if (!Object.keys(DatosPremio).length == 0 ) {
       res.json( DatosPremio );
